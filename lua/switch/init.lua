@@ -15,7 +15,7 @@ local core = require("switch.core")
 ---@type SwitchConfig
 local defaults = {
   keywords = {},
-  keymap = "<leader>sw",
+  keymap = "<leader><TAB>",
   scope = "line",
   ignore_case = false,
   preserve_case = false,

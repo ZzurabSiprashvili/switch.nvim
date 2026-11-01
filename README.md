@@ -20,6 +20,8 @@ For example, with the group `{ "true", "false" }`:
 true false  ->  false true
 ```
 
+The recommended mapping is `<leader><TAB>`, which is the default.
+
 ## Requirements
 
 - Neovim 0.9 or newer
@@ -30,7 +32,7 @@ true false  ->  false true
 
 ```lua
 {
-  "your-name/switch.nvim",
+  "ZzurabSiprashvili/switch.nvim",
   config = function()
     require("switch").setup({
       keywords = {
@@ -47,7 +49,7 @@ true false  ->  false true
 
 ```lua
 use({
-  "your-name/switch.nvim",
+  "ZzurabSiprashvili/switch.nvim",
   config = function()
     require("switch").setup({
       keywords = {
@@ -86,7 +88,7 @@ require("switch").setup({
   },
 
   -- Key mapping. Set to false to disable it.
-  keymap = "<leader>sw",
+  keymap = "<leader><TAB>",
 
   -- Where to look for keywords:
   --   "line"   - all keywords on the current line (default)
@@ -129,6 +131,67 @@ The `:Switch` command accepts an optional scope override:
 :Switch buffer
 :Switch cursor
 ```
+
+## Technical examples
+
+### JavaScript / TypeScript
+
+Switch between absence values and booleans:
+
+```lua
+require("switch").setup({
+  keywords = {
+    { "undefined", "null" },
+    { "true", "false" },
+  },
+  keymap = "<leader><TAB>",
+})
+```
+
+```ts
+const value = undefined;
+// <leader><TAB>
+const value = null;
+```
+
+Because matches are whole-word and per group, `undefined`/`null` and
+`true`/`false` can be switched independently on the same line.
+
+### Go types
+
+Cycle through the sized integer and floating-point types:
+
+```lua
+require("switch").setup({
+  keywords = {
+    { "int", "int8", "int16", "int32", "int64" },
+    { "uint", "uint8", "uint16", "uint32", "uint64" },
+    { "float32", "float64" },
+    { "complex64", "complex128" },
+  },
+  keymap = "<leader><TAB>",
+})
+```
+
+```go
+var count int
+// <leader><TAB>
+var count int8
+// <leader><TAB>
+var count int16
+```
+
+The groups wrap around:
+
+```text
+int -> int8 -> int16 -> int32 -> int64 -> int
+uint -> uint8 -> uint16 -> uint32 -> uint64 -> uint
+float32 -> float64 -> float32
+complex64 -> complex128 -> complex64
+```
+
+These are text switches, not semantic type conversions. The plugin only
+replaces the type name; it does not cast values or rewrite conversions.
 
 ## Behavior details
 
